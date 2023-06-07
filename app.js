@@ -1,18 +1,24 @@
-const EventEmiter = require("events");
+const fs = require("fs");
 
-const myEmiter = new EventEmiter();
+console.log("Init");
 
-const logDbConnection = () => {
-  console.log("DB connected");
-};
+setTimeout(() => {
+  console.log(performance.now(), "Timer 0");
+}, 10);
 
-myEmiter.addListener("connected", logDbConnection);
-myEmiter.emit("connected");
-
-myEmiter.removeListener("connected", logDbConnection);
-
-myEmiter.on("msg", (data) => {
-  console.log("Get ", data);
+setImmediate(() => {
+  console.log("Immediate");
 });
 
-myEmiter.emit("msg", "Hello");
+fs.readFile(__filename, () => {
+  console.log("Readed");
+});
+
+setTimeout(() => {
+  for (let i = 0; i < 100000; i++) {
+    return i;
+  }
+  console.log("Cicle done");
+}, 0);
+
+console.log("Final");
