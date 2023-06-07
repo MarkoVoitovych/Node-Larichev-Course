@@ -1,24 +1,18 @@
-const fs = require("fs");
+const crypto = require("crypto");
+const https = require("https");
+const start = performance.now();
 
-console.log("Init");
+// for (let i = 0; i < 50; i++) {
+//   crypto.pbkdf2("test", "salt", 100000, 64, "sha512", () => {
+//     console.log(performance.now() - start);
+//   });
+// }
 
-setTimeout(() => {
-  console.log(performance.now(), "Timer 0");
-}, 10);
-
-setImmediate(() => {
-  console.log("Immediate");
-});
-
-fs.readFile(__filename, () => {
-  console.log("Readed");
-});
-
-setTimeout(() => {
-  for (let i = 0; i < 100000; i++) {
-    return i;
-  }
-  console.log("Cicle done");
-}, 0);
-
-console.log("Final");
+for (let i = 0; i < 20; i++) {
+  https.get("https://google.com", (res) => {
+    res.on("data", () => {});
+    res.on("end", () => {
+      console.log(performance.now() - start);
+    });
+  });
+}
