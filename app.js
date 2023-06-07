@@ -1,28 +1,46 @@
-const factorial = require("./factorial");
+const { Worker, workerData } = require("worker_threads");
+const { performance, PerformanceObserver } = require("perf_hooks");
+const { fork } = require("child_process");
 
-const compute = (arr) => {
-  const array = [];
-  for (let i = 0; i < 10000000; i++) {
-    array.push(i * i);
-  }
-  return arr.map((el) => factorial(el));
+const performanceObserver = new PerformanceObserver((items) => {
+  items.getEntries().forEach((entry) => {
+    console.log(`${entry.name} : ${entry.duration}`);
+  });
+});
+
+performanceObserver.observe({ entryTypes: ["measure"] });
+
+const workerFunction = (array) => {
+  return new Promise((resolve, reject) => {
+    performance.mark("worker start");
+    const worker = new Worker("./worker.js", {
+      workerData: { array },
+    });
+    worker.on("message", (msg) => {
+      performance.mark("worker end");
+      performance.measure("worker", "worker start", "worker end");
+      resolve(msg);
+    });
+  });
 };
 
-function main() {
-  performance.mark("start");
-  const result = [
-    compute([12, 14, 32, 22]),
-    compute([12, 14, 32, 22]),
-    compute([12, 14, 32]),
-    compute([12, 14, 32]),
-  ];
+const forkFunction = (array) => {
+  return new Promise((resolve, reject) => {
+    performance.mark("fork start");
 
-  console.log(result);
+    const forkProcess = fork("./fork.js");
+    forkProcess.send({ array });
+    forkProcess.on("message", (msg) => {
+      performance.mark("fork end");
+      performance.measure("fork", "fork start", "fork end");
+      resolve(msg);
+    });
+  });
+};
 
-  performance.mark("end");
-
-  performance.measure("main", "start", "end");
-  console.log(performance.getEntriesByName("main").pop());
-}
+const main = async () => {
+  await workerFunction([25, 19, 15, 33]);
+  await forkFunction([25, 19, 15, 33]);
+};
 
 main();
