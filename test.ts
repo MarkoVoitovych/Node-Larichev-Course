@@ -1,30 +1,17 @@
-let a: number = 5;
-let b: string = "5";
+let universalId: number | string = 5;
+universalId = "sad";
 
-let c: number = a + Number(b);
-
-let names: string[] = ["sfsf", "www"];
-let ages: number[] = [6, 4];
-
-let tup: [number, string] = [2, "dfs"];
-
-tup.push("fdsfs");
-// tup[2]  error
-
-let e: any = 3;
-e = true;
-
-function greet(name: string): string {
-  return name + "Hi";
+function printId(id: number | string) {
+  if (typeof id === "string") {
+    console.log(id.toUpperCase());
+  } else {
+    console.log(id);
+  }
 }
 
-greet("3");
-
-names.map((x: string) => x);
-
-const coord = (coord: { lat: number; long?: number }): number => {
-  if (coord.long) {
-    return coord.lat * coord.long;
+function helloUser(user: string | string[]) {
+  if (Array.isArray(user)) {
+    console.log(user.join(", "));
   }
-  return coord.lat * 10;
-};
+  console.log(user + "Hello");
+}
