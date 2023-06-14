@@ -1,4 +1,4 @@
-import express from "express";
+import express, { Request, Response, NextFunction } from "express";
 import logger from "morgan";
 import "dotenv/config";
 
@@ -12,7 +12,7 @@ app.use(logger(formatsLogger));
 
 app.use("/users", userRouter);
 
-app.use((err, req, res, next) => {
+app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   console.log(err.message);
   res.status(500).send(err.message);
 });
