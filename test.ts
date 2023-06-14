@@ -18,6 +18,13 @@ function greet(name: string): string {
   return name + "Hi";
 }
 
-greet(3);
+greet("3");
 
 names.map((x: string) => x);
+
+const coord = (coord: { lat: number; long?: number }): number => {
+  if (coord.long) {
+    return coord.lat * coord.long;
+  }
+  return coord.lat * 10;
+};
