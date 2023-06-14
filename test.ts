@@ -1,22 +1,86 @@
-interface IHasLength {
-  length: number;
+class Coord {
+  lat: number;
+  long: number;
+
+  computeDistance(newLat: number, newLong: number): number {
+    return 0;
+  }
+
+  constructor(lat: number, long: number) {
+    this.lat = lat;
+    this.long = long;
+  }
 }
 
-function log<T extends IHasLength, K>(obj: T, arr: K[]): K[] {
-  arr.length;
-  obj.length;
-  console.log(obj);
-  return arr;
+const point = new Coord(3, 3);
+
+class MapLocation extends Coord {
+  private _name: string;
+
+  constructor(lat: number, long: number) {
+    super(lat, long);
+  }
+
+  get name() {
+    return this._name;
+  }
+
+  set name(newName: string) {
+    this._name = newName + "cool";
+  }
+
+  override computeDistance(newLat: number, newLong: number): number {
+    console.log(this._name);
+    return 1;
+  }
 }
 
-log<string, number>("asdf", [3]);
+const loc = new MapLocation(3, 2);
 
-interface IUser {
+loc.name = "abs";
+for (let i in loc) {
+  console.log(i);
+}
+
+interface LoggerService {
+  log: (s: string) => void;
+}
+
+class Logger implements LoggerService {
+  log(s: string) {
+    console.log(s);
+  }
+}
+
+class MyClass<T> {
+  a: T;
+}
+
+const b = new MyClass<string>();
+b.a;
+
+abstract class Base {
+  print(s: string) {
+    console.log(s);
+  }
+  abstract error(s: string): void;
+}
+
+class BaseExtanded extends Base {
+  error(s: string): void {
+    console.log(s);
+  }
+}
+
+new BaseExtanded().print("ddd");
+
+class Animal {
   name: string;
-  age?: number;
-  bid: <T>(sum: T) => boolean;
 }
 
-function bid<T>(sum: T): boolean {
-  return true;
+class Dog {
+  tail: boolean;
+  name: string;
 }
+
+const puppy: Animal = new Dog();
