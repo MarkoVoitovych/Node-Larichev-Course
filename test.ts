@@ -1,52 +1,22 @@
-type Coord = {
-  lat: number;
-  long: number;
-};
-
-interface ICoord {
-  lat: number;
-  long: number;
+interface IHasLength {
+  length: number;
 }
 
-type Id = number | string;
+function log<T extends IHasLength, K>(obj: T, arr: K[]): K[] {
+  arr.length;
+  obj.length;
+  console.log(obj);
+  return arr;
+}
 
-function compute(coordinates: ICoord) {}
+log<string, number>("asdf", [3]);
 
-interface IAnimal {
+interface IUser {
   name: string;
+  age?: number;
+  bid: <T>(sum: T) => boolean;
 }
 
-interface IDog extends IAnimal {
-  tail: boolean;
+function bid<T>(sum: T): boolean {
+  return true;
 }
-
-const dog: IDog = {
-  tail: true,
-  name: "Flufy",
-};
-
-dog.name;
-
-type Flower = {
-  name: string;
-};
-
-const rose: Flower & { hasLeaves: boolean } = {
-  name: "Rose",
-  hasLeaves: true,
-};
-
-export type { Flower };
-
-interface Car {
-  name: string;
-}
-
-interface Car {
-  engine: string;
-}
-
-const tesla: Car = {
-  name: "Tesla",
-  engine: "electric",
-};
