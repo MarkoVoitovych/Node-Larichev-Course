@@ -1,6 +1,6 @@
-import { LoggerService } from "../logger/logger.service";
+import { LoggerService } from "../logger/logger.service.js";
 import { Router, Response } from "express";
-import { IControllerRoute } from "./routes.interface";
+import { IControllerRoute } from "./routes.interface.js";
 
 export abstract class BaseController {
   private readonly _router: Router;
