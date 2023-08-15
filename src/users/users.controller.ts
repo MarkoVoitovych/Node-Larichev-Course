@@ -26,7 +26,7 @@ export class UserController extends BaseController {
   }
 
   login(req: Request, res: Response, next: NextFunction) {
-    next(new HttpError(401, "Not authorized", "login"));
-    // this.ok(res, "login");
+    // next(new HttpError(401, "Not authorized", "login"));
+    this.ok(res, "login");
   }
 }
