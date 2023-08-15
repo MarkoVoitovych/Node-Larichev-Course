@@ -35,6 +35,7 @@ export class App {
 
   public async init() {
     this.useRoutes();
+    this.useExeptionFilters();
     this.server = this.app.listen(this.port);
     this.logger.log(`Server runs on port ${this.port}`);
   }

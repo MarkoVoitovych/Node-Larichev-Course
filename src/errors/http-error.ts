@@ -1,12 +1,10 @@
-export class HttpError {
-  context?: string;
-
+export class HttpError extends Error {
   constructor(
     public statusCode: number,
     public message: string,
-    context?: string
+    public context?: string
   ) {
-    // super(message);
+    super(message);
     this.statusCode = statusCode;
     this.message = message;
     this.context = context;

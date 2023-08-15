@@ -9,24 +9,24 @@ export class UserController extends BaseController {
     super(logger);
     this.bindRoutes([
       {
-        path: "/login",
-        method: "post",
-        func: this.login,
-      },
-      {
         path: "/register",
         method: "post",
         func: this.register,
       },
+      {
+        path: "/login",
+        method: "post",
+        func: this.login,
+      },
     ]);
-  }
-
-  login(req: Request, res: Response, next: NextFunction) {
-    next(new HttpError(401, "No authorized"));
-    this.ok(res, "login");
   }
 
   register(req: Request, res: Response, next: NextFunction) {
     this.created(res);
+  }
+
+  login(req: Request, res: Response, next: NextFunction) {
+    next(new HttpError(401, "Not authorized", "login"));
+    // this.ok(res, "login");
   }
 }
