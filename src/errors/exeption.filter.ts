@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { LoggerService } from "../logger/logger.service.js";
 import { IExeptionFilter } from "./exeption.filter.interface.js";
-import { HTTPError } from "./http-error.js";
+import { HttpError } from "./http-error.js";
 
 export class ExeptionFilter implements IExeptionFilter {
   logger: LoggerService;
@@ -9,12 +9,12 @@ export class ExeptionFilter implements IExeptionFilter {
     this.logger = logger;
   }
   catch(
-    err: Error | HTTPError,
+    err: Error | HttpError,
     req: Request,
     res: Response,
     next: NextFunction
   ) {
-    if (err instanceof HTTPError) {
+    if (err instanceof HttpError) {
       this.logger.error(
         `[${err.context}] Error ${err.statusCode}: ${err.message}`
       );

@@ -1,4 +1,4 @@
-export class HTTPError {
+export class HttpError {
   context?: string;
 
   constructor(
