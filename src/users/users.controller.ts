@@ -2,11 +2,11 @@ import { NextFunction, Request, Response } from 'express';
 import { injectable, inject } from 'inversify';
 import 'reflect-metadata';
 
-import { BaseController } from '../common/base.controller.js';
-import { HttpError } from '../errors/http-error.js';
-import { TYPES } from '../types.js';
-import { ILogger } from '../logger/logger.interface.js';
-import { IUserController } from './users.controller.interface.js';
+import { BaseController } from '../common/base.controller';
+import { HttpError } from '../errors/http-error';
+import { TYPES } from '../types';
+import { ILogger } from '../logger/logger.interface';
+import { IUserController } from './users.controller.interface';
 
 @injectable()
 export class UserController extends BaseController implements IUserController {
@@ -31,7 +31,8 @@ export class UserController extends BaseController implements IUserController {
 	}
 
 	login(req: Request, res: Response, next: NextFunction): void {
-		// next(new HttpError(401, "Not authorized", "login"));
-		this.ok(res, 'login');
+		console.log('first');
+		next(new HttpError(401, 'Not authorized', 'login'));
+		// this.ok(res, 'login');
 	}
 }

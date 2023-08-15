@@ -3,10 +3,10 @@ import { Server } from 'http';
 import { injectable, inject } from 'inversify';
 import 'reflect-metadata';
 
-import { UserController } from './users/users.controller.js';
-import { ILogger } from './logger/logger.interface.js';
-import { ExeptionFilter } from './errors/exeption.filter.js';
-import { TYPES } from './types.js';
+import { UserController } from './users/users.controller';
+import { ILogger } from './logger/logger.interface';
+import { ExeptionFilter } from './errors/exeption.filter';
+import { TYPES } from './types';
 
 @injectable()
 export class App {
