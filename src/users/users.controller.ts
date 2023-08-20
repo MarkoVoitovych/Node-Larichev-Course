@@ -7,10 +7,17 @@ import { HttpError } from '../errors/http-error';
 import { TYPES } from '../types';
 import { ILogger } from '../logger/logger.interface';
 import { IUserController } from './users.controller.interface';
+import { UserRegisterDto } from './dto/user-register.dto';
+import { UserLoginDto } from './dto/user-login.dto';
+import { IUserService } from './users.service.interface';
+import { User } from './user.entity';
 
 @injectable()
 export class UserController extends BaseController implements IUserController {
-	constructor(@inject(TYPES.ILogger) private loggerService: ILogger) {
+	constructor(
+		@inject(TYPES.Logger) private loggerService: ILogger,
+		@inject(TYPES.UserService) private userService: IUserService,
+	) {
 		super(loggerService);
 		this.bindRoutes([
 			{
@@ -26,13 +33,20 @@ export class UserController extends BaseController implements IUserController {
 		]);
 	}
 
-	register(req: Request, res: Response, next: NextFunction): void {
-		this.created(res);
+	async register(
+		{ body }: Request<{}, {}, UserRegisterDto>,
+		res: Response,
+		next: NextFunction,
+	): Promise<void> {
+		const result = await this.userService.createUser(body);
+		if (!result) {
+			next(new HttpError(409, 'Email in use', 'register'));
+			return;
+		}
+		this.ok(res, { email: result.email });
 	}
 
-	login(req: Request, res: Response, next: NextFunction): void {
-		console.log('first');
-		next(new HttpError(401, 'Not authorized', 'login'));
-		// this.ok(res, 'login');
+	login(req: Request<{}, {}, UserLoginDto>, res: Response, next: NextFunction): void {
+		this.ok(res, 'login');
 	}
 }

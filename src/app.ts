@@ -1,5 +1,6 @@
 import express, { Express } from 'express';
 import { Server } from 'http';
+import { json } from 'body-parser';
 import { injectable, inject } from 'inversify';
 import 'reflect-metadata';
 
@@ -15,15 +16,17 @@ export class App {
 	port: number;
 
 	constructor(
-		@inject(TYPES.ILogger) private logger: ILogger,
-		@inject(TYPES.IUserController) private userController: UserController,
-		@inject(TYPES.IExeptionFilter) private exeptionFilter: ExeptionFilter,
+		@inject(TYPES.Logger) private logger: ILogger,
+		@inject(TYPES.UserController) private userController: UserController,
+		@inject(TYPES.ExeptionFilter) private exeptionFilter: ExeptionFilter,
 	) {
 		this.app = express();
 		this.port = 4000;
 	}
 
-	useMiddleWare(): void {}
+	useMiddleWare(): void {
+		this.app.use(json());
+	}
 
 	useRoutes(): void {
 		this.app.use('/users', this.userController.router);
