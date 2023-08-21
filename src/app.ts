@@ -4,11 +4,10 @@ import { json } from 'body-parser';
 import { injectable, inject } from 'inversify';
 import 'reflect-metadata';
 
-import { UserController } from './users/users.controller';
+import { UsersController } from './users/users.controller';
 import { ILogger } from './logger/logger.interface';
 import { TYPES } from './types';
 import { IConfigService } from './config/config.service.interface';
-import { IUserController } from './users/users.controller.interface';
 import { IExeptionFilter } from './errors/exeption.filter.interface';
 import { PrismaService } from './database/prisma.service';
 
@@ -20,7 +19,7 @@ export class App {
 
 	constructor(
 		@inject(TYPES.Logger) private logger: ILogger,
-		@inject(TYPES.UserController) private userController: UserController, // IUserController
+		@inject(TYPES.UsersController) private usersController: UsersController, // IUserController
 		@inject(TYPES.ExeptionFilter) private exeptionFilter: IExeptionFilter,
 		@inject(TYPES.PrismaService) private prismaService: PrismaService,
 		@inject(TYPES.ConfigService) private configService: IConfigService,
@@ -34,7 +33,7 @@ export class App {
 	}
 
 	useRoutes(): void {
-		this.app.use('/users', this.userController.router);
+		this.app.use('/users', this.usersController.router);
 	}
 
 	useExeptionFilters(): void {
