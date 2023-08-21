@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
 import { injectable, inject } from 'inversify';
-import 'reflect-metadata';
 
 import { BaseController } from '../common/base.controller';
 import { HttpError } from '../errors/http-error';
@@ -10,7 +9,7 @@ import { IUserController } from './users.controller.interface';
 import { UserRegisterDto } from './dto/user-register.dto';
 import { UserLoginDto } from './dto/user-login.dto';
 import { IUserService } from './users.service.interface';
-import { User } from './user.entity';
+import { ValidareMiddleware } from '../common/validate.middleware';
 
 @injectable()
 export class UserController extends BaseController implements IUserController {
@@ -24,6 +23,7 @@ export class UserController extends BaseController implements IUserController {
 				path: '/register',
 				method: 'post',
 				func: this.register,
+				middlewares: [new ValidareMiddleware(UserRegisterDto)],
 			},
 			{
 				path: '/login',
