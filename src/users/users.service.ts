@@ -6,13 +6,14 @@ import { User } from './user.entity';
 import { IUserService } from './users.service.interface';
 import { TYPES } from '../types';
 import { IConfigService } from '../config/config.service.interface';
+import { ENUMS } from '../common/enums';
 
 @injectable()
 export class UserService implements IUserService {
 	constructor(@inject(TYPES.ConfigService) private configService: IConfigService) {}
 	async createUser({ email, name, password }: UserRegisterDto): Promise<User | null> {
 		const newUser = new User(email, name);
-		const salt = this.configService.get('SALT');
+		const salt = this.configService.get(ENUMS.SALT);
 		await newUser.setPassword(password, Number(salt));
 		return newUser;
 	}
