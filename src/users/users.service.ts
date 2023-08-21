@@ -1,5 +1,6 @@
 import { inject, injectable } from 'inversify';
 import { UserModel } from '@prisma/client';
+import { plainToClass } from 'class-transformer';
 
 import { UserLoginDto } from './dto/user-login.dto';
 import { UserRegisterDto } from './dto/user-register.dto';
@@ -28,7 +29,19 @@ export class UsersService implements IUsersService {
 		return await this.usersRepository.create(newUser);
 	}
 
-	async validateUser(dto: UserLoginDto): Promise<boolean> {
-		return true;
+	async validateUser(
+		{ email, name, password: hashPassword }: UserModel,
+		password: string,
+	): Promise<boolean> {
+		const newUser = new User(email, name, hashPassword);
+		return await newUser.comparePassword(password);
+	}
+
+	async getUserInfo(email: string): Promise<UserModel | null> {
+		const existedUser = await this.usersRepository.find(email);
+		if (!existedUser) {
+			return null;
+		}
+		return existedUser;
 	}
 }

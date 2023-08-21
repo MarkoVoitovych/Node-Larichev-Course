@@ -16,12 +16,12 @@ export abstract class BaseController {
 		return this._router;
 	}
 
-	public send<T>(res: Response, code: number, message: T): void {
-		res.status(code).json(message);
+	public send<T>(res: Response, code: number, data: T): void {
+		res.status(code).json(data);
 	}
 
-	public ok<T>(res: Response, message: T): void {
-		this.send<T>(res, 200, message);
+	public ok<T>(res: Response, data: T): void {
+		this.send<T>(res, 200, data);
 	}
 
 	public created(res: Response): void {
