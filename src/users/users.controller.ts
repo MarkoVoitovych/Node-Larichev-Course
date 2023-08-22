@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { injectable, inject } from 'inversify';
+import jwt from 'jsonwebtoken';
 
 import { BaseController } from '../common/base.controller';
 import { HttpError } from '../errors/http-error';
@@ -10,12 +11,15 @@ import { UserRegisterDto } from './dto/user-register.dto';
 import { UserLoginDto } from './dto/user-login.dto';
 import { IUsersService } from './users.service.interface';
 import { ValidareMiddleware } from '../common/validate.middleware';
+import { IConfigService } from '../config/config.service.interface';
+import { ENUMS } from '../common/enums';
 
 @injectable()
 export class UsersController extends BaseController implements IUserController {
 	constructor(
 		@inject(TYPES.Logger) private loggerService: ILogger,
 		@inject(TYPES.UsersService) private userService: IUsersService,
+		@inject(TYPES.ConfigService) private configService: IConfigService,
 	) {
 		super(loggerService);
 		this.bindRoutes([
@@ -62,6 +66,21 @@ export class UsersController extends BaseController implements IUserController {
 			next(new HttpError(401, 'Email or password is wrong.', 'login'));
 			return;
 		}
-		this.ok(res, { email: result.email, id: result.id });
+		const token = this.signJWT(body.email, this.configService.get(ENUMS.SECRET));
+		this.ok(res, { email: result.email, id: result.id, token });
+	}
+
+	private signJWT(email: string, secret: string): string {
+		return jwt.sign(
+			{
+				email,
+				iat: Math.floor(Date.now() / 1000),
+			},
+			secret,
+			{
+				algorithm: 'HS256',
+				expiresIn: '23h',
+			},
+		);
 	}
 }
