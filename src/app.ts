@@ -27,13 +27,13 @@ export class App {
 		@inject(TYPES.ConfigService) private configService: IConfigService,
 	) {
 		this.app = express();
-		this.port = Number(configService.get(ENUMS.PORT));
+		this.port = Number(this.configService.get(ENUMS.PORT));
 	}
 
 	useMiddleWare(): void {
 		this.app.use(json());
 		const authMiddleware = new AuthMiddleware(this.configService.get(ENUMS.SECRET));
-		// this.app.use(authMiddleware.execute.bind(authMiddleware));
+		this.app.use(authMiddleware.execute.bind(authMiddleware));
 	}
 
 	useRoutes(): void {

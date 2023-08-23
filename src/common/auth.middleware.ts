@@ -11,19 +11,22 @@ interface JwtPayload {
 export class AuthMiddleware implements IMiddleware {
 	constructor(private secret: string) {}
 	execute(req: Request, res: Response, next: NextFunction): void {
-		const { authorization = '' } = req.headers;
-		const [bearer, token] = authorization.split(' ');
-		if (bearer !== 'Bearer' || !token) {
-			return next(new HttpError(401, 'No token provided', 'AuthMiddware'));
+		if (req.headers.authorization) {
+			const { authorization = '' } = req.headers;
+			const [bearer, token] = authorization.split(' ');
+			if (bearer !== 'Bearer' || !token) {
+				return next(new HttpError(401, 'No token provided', 'AuthMiddware'));
+			}
+			let payload: JwtPayload;
+			try {
+				payload = jwt.verify(token, this.secret) as JwtPayload;
+			} catch (error) {
+				return next(new HttpError(401, 'No token provided', 'AuthMiddware'));
+			}
+			req.user = payload.email;
+			next();
+		} else {
+			next();
 		}
-		let payload: JwtPayload;
-		try {
-			payload = jwt.verify(token, this.secret) as JwtPayload;
-		} catch (error) {
-			return next(new HttpError(401, 'No token provided', 'AuthMiddware'));
-		}
-		req.user = payload.email;
-
-		next();
 	}
 }
