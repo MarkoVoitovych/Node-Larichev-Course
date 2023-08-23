@@ -10,6 +10,8 @@ import { TYPES } from './types';
 import { IConfigService } from './config/config.service.interface';
 import { IExeptionFilter } from './errors/exeption.filter.interface';
 import { PrismaService } from './database/prisma.service';
+import { ENUMS } from './common/enums';
+import { AuthMiddleware } from './common/auth.middleware';
 
 @injectable()
 export class App {
@@ -25,11 +27,13 @@ export class App {
 		@inject(TYPES.ConfigService) private configService: IConfigService,
 	) {
 		this.app = express();
-		this.port = 4000;
+		this.port = Number(configService.get(ENUMS.PORT));
 	}
 
 	useMiddleWare(): void {
 		this.app.use(json());
+		const authMiddleware = new AuthMiddleware(this.configService.get(ENUMS.SECRET));
+		// this.app.use(authMiddleware.execute.bind(authMiddleware));
 	}
 
 	useRoutes(): void {

@@ -13,6 +13,7 @@ import { IUsersService } from './users.service.interface';
 import { ValidareMiddleware } from '../common/validate.middleware';
 import { IConfigService } from '../config/config.service.interface';
 import { ENUMS } from '../common/enums';
+import { AuthMiddleware } from '../common/auth.middleware';
 
 @injectable()
 export class UsersController extends BaseController implements IUserController {
@@ -34,6 +35,12 @@ export class UsersController extends BaseController implements IUserController {
 				method: 'post',
 				func: this.login,
 				middlewares: [new ValidareMiddleware(UserLoginDto)],
+			},
+			{
+				path: '/info',
+				method: 'get',
+				func: this.info,
+				middlewares: [new AuthMiddleware(this.configService.get(ENUMS.SECRET))],
 			},
 		]);
 	}
@@ -68,6 +75,10 @@ export class UsersController extends BaseController implements IUserController {
 		}
 		const token = this.signJWT(body.email, this.configService.get(ENUMS.SECRET));
 		this.ok(res, { email: result.email, id: result.id, token });
+	}
+
+	async info({ user }: Request, res: Response, next: NextFunction): Promise<void> {
+		this.ok(res, { email: user });
 	}
 
 	private signJWT(email: string, secret: string): string {
